@@ -21,8 +21,8 @@ public:
         SDL_Init(SDL_INIT_VIDEO);
         // Creating the window and the renderer
         SDL_CreateWindowAndRenderer(
-            SCREEN_WIDTH*2, // Multiplying the resolution by the scale
-            SCREEN_HEIGHT*2, // Multiplying the resolution by the scale
+            SCREEN_WIDTH, // Multiplying the resolution by the scale
+            SCREEN_HEIGHT, // Multiplying the resolution by the scale
             0,
             &window,
             &renderer
@@ -38,7 +38,7 @@ public:
     void pixel(float x, float y)
     {
         // Creates a new point struct and adds it to the vector
-        points.emplace_back(x, y); // use push_back if emplace_back doesn't work
+        points.emplace_back(SDL_FPoint{x, y}); // use push_back if emplace_back doesn't work
     }
 
     /**
