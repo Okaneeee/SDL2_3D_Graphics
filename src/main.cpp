@@ -1,12 +1,17 @@
 ﻿#define SDL_MAIN_HANDLED // Avoid WinMain error
-#include <screen.hpp>
 #include <cmath>
+#include <numeric>
+#include <screen.hpp>
 
 struct Vector3
 {
     float x, y, z;
 };
 
+struct connection
+{
+    int a, b;
+};
 
 /**
  * Rotate a point in 3D space
@@ -73,6 +78,23 @@ int main(int argc, char* argv[]) {
         {100, 200, 200}
     };
 
+    std::vector<connection> connections{
+        {0, 1},
+        {1, 2},
+        {2, 3},
+        {3, 0},
+
+        {4, 5},
+        {5, 6},
+        {6, 7},
+        {7, 4},
+
+        {0, 4},
+        {1, 5},
+        {2, 6},
+        {3, 7}
+    };
+
     Vector3 centre {0, 0, 0};
     // Calculate the centre of the cube (centroid)
     for(auto& p : points)
@@ -99,7 +121,7 @@ int main(int argc, char* argv[]) {
             point.y -= centre.y;
             point.z -= centre.z;
 
-            rotate(point, 0.002, 0.001, 0.004);
+            rotate(point, 0.02, 0.01, 0.04);
 
             // Add back the centre to the point
             point.x += centre.x;
@@ -110,6 +132,13 @@ int main(int argc, char* argv[]) {
             screen.pixel(point.x, point.y);
         }
 
+        for(auto& conn : connections)
+        {
+            line(screen, points[conn.a].x,
+                            points[conn.a].y,
+                            points[conn.b].x,
+                            points[conn.b].y);
+        }
 
         screen.show(); // Showing the screen
         screen.clear(); // Clearing the screen to avoid drawing the same points again
