@@ -7,14 +7,16 @@
 
 class Screen
 {
+private:
     // SDL basic elements
     SDL_Event e;
     SDL_Window* window;
     SDL_Renderer* renderer;
     std::vector<SDL_FPoint> points;
 
+public:
     // Constructor
-    public Screen()
+    Screen()
     {
         SDL_Init(SDL_INIT_VIDEO);
         // Creating the window and the renderer
