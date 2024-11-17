@@ -4,7 +4,7 @@
 int main(int argc, char* argv[]) {
     // SDL initialization
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-        SDL_Log("Erreur d'initialisation de SDL : %s", SDL_GetError());
+        SDL_Log("SDL initialization error : %s", SDL_GetError());
         return -1;
     }
 
