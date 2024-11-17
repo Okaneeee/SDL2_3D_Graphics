@@ -1,6 +1,5 @@
 ﻿#define SDL_MAIN_HANDLED // Avoid WinMain error
 #include <cmath>
-#include <numeric>
 #include <screen.hpp>
 
 struct Vector3
@@ -135,7 +134,7 @@ int main(int argc, char* argv[]) {
             Vector3 translatedPoint = { point.x - centre.x, point.y - centre.y, point.z - centre.z };
 
             // Rotate the translated point
-            Vector3 rotatedPoint = rotate(translatedPoint, 0.2, 0.1, 0.4);
+            Vector3 rotatedPoint = rotate(translatedPoint, 0.02, 0.01, 0.04);
 
             // Add back the centre to the rotated point
             point.x = rotatedPoint.x + centre.x;
