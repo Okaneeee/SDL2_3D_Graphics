@@ -46,19 +46,20 @@ void rotate(Vector3& point, float x = 1 , float y = 1, float z = 1)
  * @param y2 Y coordinate of the second point
  */
 void line(Screen& screen, float x1, float y1, float x2, float y2) {
-    // Bresenham's line algorithm
-    int dx = abs(x2 - x1);
-    int dy = abs(y2 - y1);
-    int sx = x1 < x2 ? 1 : -1;
-    int sy = y1 < y2 ? 1 : -1;
-    int err = dx - dy;
+    // Calculate the distance between the two points
+    float dx = x2 - x1;
+    float dy = y2 - y1;
 
-    while(true) {
-        screen.pixel(x1, y1);
-        if(x1 == x2 && y1 == y2) break;
-        int e2 = 2*err;
-        if(e2 > -dy) { err -= dy; x1 += sx; }
-        if(e2 < dx) { err += dx; y1 += sy; }
+    // Calculate the number of steps to take
+    int steps = std::max(std::abs(dx), std::abs(dy));
+
+    // Calculate the increment in each axis
+    float x_inc = dx / steps;
+    float y_inc = dy / steps;
+
+    // Draw the line
+    for(int i = 0; i < steps; i++) {
+        screen.pixel(x1 + i * x_inc, y1 + i * y_inc);
     }
 }
 
