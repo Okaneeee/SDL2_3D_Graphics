@@ -15,26 +15,40 @@ struct connection
 
 /**
  * Rotate a point in 3D space
- * @param point Point to rotate
+ * @param original Point to rotate
  * @param x Rotation in the X axis
  * @param y Rotation in the Y axis
  * @param z Rotation in the Z axis
  */
-void rotate(Vector3& point, float x = 1 , float y = 1, float z = 1)
+Vector3 rotate(const Vector3& original, float x = 1, float y = 1, float z = 1)
 {
-    float rad = 0;
+    // Create a copy of the original point to apply rotation
+    Vector3 rotated = original;
 
-    point.y = point.y * cos(rad) - point.z * sin(rad);
-    point.z = point.y * sin(rad) + point.z * cos(rad);
+    float rad;
 
+    // Rotate around the X axis
+    rad = x;
+    float tempY = rotated.y * cos(rad) - rotated.z * sin(rad);
+    float tempZ = rotated.y * sin(rad) + rotated.z * cos(rad);
+    rotated.y = tempY;
+    rotated.z = tempZ;
+
+    // Rotate around the Y axis
     rad = y;
-    point.x = point.x * cos(rad) - point.z * sin(rad);
-    point.z = point.x * sin(rad) + point.z * cos(rad);
+    float tempX = rotated.x * cos(rad) + rotated.z * sin(rad);
+    tempZ = -rotated.x * sin(rad) + rotated.z * cos(rad);
+    rotated.x = tempX;
+    rotated.z = tempZ;
 
+    // Rotate around the Z axis
     rad = z;
-    point.x = point.x * cos(rad) - point.y * sin(rad);
-    point.y = point.x * sin(rad) + point.y * cos(rad);
+    tempX = rotated.x * cos(rad) - rotated.y * sin(rad);
+    tempY = rotated.x * sin(rad) + rotated.y * cos(rad);
+    rotated.x = tempX;
+    rotated.y = tempY;
 
+    return rotated;
 }
 
 /**
@@ -115,19 +129,18 @@ int main(int argc, char* argv[]) {
     while(true)
     {
         // Draw and rotate the cube
-        for(auto& point : points)
+        for (auto& point : points)
         {
             // Subtract the centre from the point
-            point.x -= centre.x;
-            point.y -= centre.y;
-            point.z -= centre.z;
+            Vector3 translatedPoint = { point.x - centre.x, point.y - centre.y, point.z - centre.z };
 
-            rotate(point, 0.02, 0.01, 0.04);
+            // Rotate the translated point
+            Vector3 rotatedPoint = rotate(translatedPoint, 0.2, 0.1, 0.4);
 
-            // Add back the centre to the point
-            point.x += centre.x;
-            point.y += centre.y;
-            point.z += centre.z;
+            // Add back the centre to the rotated point
+            point.x = rotatedPoint.x + centre.x;
+            point.y = rotatedPoint.y + centre.y;
+            point.z = rotatedPoint.z + centre.z;
 
             // Draw the point
             screen.pixel(point.x, point.y);
