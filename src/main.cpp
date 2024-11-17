@@ -1,29 +1,19 @@
 ﻿#define SDL_MAIN_HANDLED // Avoid WinMain error
-#include <SDL.h>
+#include <screen.hpp>
 
 int main(int argc, char* argv[]) {
-    // SDL initialization
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-        SDL_Log("SDL initialization error : %s", SDL_GetError());
-        return -1;
+    Screen screen;
+
+    // Add 100 random pixels
+    for(int i = 0; i < 100; i++) {
+        screen.pixel(rand()%SCREEN_WIDTH, rand()%SCREEN_HEIGHT);
     }
 
-    // SDL Window
-    SDL_Window* window = SDL_CreateWindow("Test",
-                                          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                          800, 600, SDL_WINDOW_SHOWN);
-    if (!window) {
-        SDL_Log("Error when creating the window : %s", SDL_GetError());
-        SDL_Quit();
-        return -1;
+    // Main loop
+    while(true)
+    {
+        screen.show(); // Showing the screen
+        screen.input(); // Check if the user wants to close the window
     }
 
-    // Wait 3 seconds
-    SDL_Delay(3000);
-
-    // Clean and quit
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-
-    return 0;
 }
