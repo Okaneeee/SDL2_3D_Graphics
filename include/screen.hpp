@@ -60,6 +60,14 @@ public:
     }
 
     /**
+     * Clear the screen
+     */
+    void clear()
+    {
+        points.clear();
+    }
+
+    /**
      * Handle the inputs
      */
     void input()
