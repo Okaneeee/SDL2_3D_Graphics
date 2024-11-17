@@ -1,6 +1,45 @@
 ﻿#define SDL_MAIN_HANDLED // Avoid WinMain error
 #include <screen.hpp>
+#include <cmath>
 
+struct Vector3
+{
+    float x, y, z;
+};
+
+
+/**
+ * Rotate a point in 3D space
+ * @param point Point to rotate
+ * @param x Rotation in the X axis
+ * @param y Rotation in the Y axis
+ * @param z Rotation in the Z axis
+ */
+void rotate(Vector3& point, float x = 1 , float y = 1, float z = 1)
+{
+    float rad = 0;
+
+    point.y = point.y * cos(rad) - point.z * sin(rad);
+    point.z = point.y * sin(rad) + point.z * cos(rad);
+
+    rad = y;
+    point.x = point.x * cos(rad) - point.z * sin(rad);
+    point.z = point.x * sin(rad) + point.z * cos(rad);
+
+    rad = z;
+    point.x = point.x * cos(rad) - point.y * sin(rad);
+    point.y = point.x * sin(rad) + point.y * cos(rad);
+
+}
+
+/**
+ * Draw a line between two points
+ * @param screen Screen object
+ * @param x1 X coordinate of the first point
+ * @param y1 Y coordinate of the first point
+ * @param x2 X coordinate of the second point
+ * @param y2 Y coordinate of the second point
+ */
 void line(Screen& screen, float x1, float y1, float x2, float y2) {
     // Bresenham's line algorithm
     int dx = abs(x2 - x1);
@@ -21,21 +60,63 @@ void line(Screen& screen, float x1, float y1, float x2, float y2) {
 int main(int argc, char* argv[]) {
     Screen screen;
 
-    // Add 100 random pixels
-    for(int i = 0; i < 100; i++) {
-        screen.pixel(rand()%SCREEN_WIDTH, rand()%SCREEN_HEIGHT);
+    // Cube points
+    std::vector<Vector3> points{
+        {100, 100, 100},
+        {200, 100, 100},
+        {200, 200, 100},
+        {100, 200, 100},
+
+        {100, 100, 200},
+        {200, 100, 200},
+        {200, 200, 200},
+        {100, 200, 200}
+    };
+
+    Vector3 centre {0, 0, 0};
+    // Calculate the centre of the cube (centroid)
+    for(auto& p : points)
+    {
+        // Summing up all the vertices x, y and z
+        centre.x += p.x;
+        centre.y += p.y;
+        centre.z += p.z;
     }
 
-    line(screen, 100, 100, 200, 100);
-    line(screen, 200, 100, 200, 200);
-    line(screen, 200, 200, 100, 200);
-    line(screen, 100, 200, 100, 100);
+    // Divide by the number of vertices
+    centre.x /= points.size();
+    centre.y /= points.size();
+    centre.z /= points.size();
 
     // Main loop
     while(true)
     {
+        // Draw and rotate the cube
+        for(auto& point : points)
+        {
+            // Subtract the centre from the point
+            point.x -= centre.x;
+            point.y -= centre.y;
+            point.z -= centre.z;
+
+            rotate(point, 0.002, 0.001, 0.004);
+
+            // Add back the centre to the point
+            point.x += centre.x;
+            point.y += centre.y;
+            point.z += centre.z;
+
+            // Draw the point
+            screen.pixel(point.x, point.y);
+        }
+
+
         screen.show(); // Showing the screen
+        screen.clear(); // Clearing the screen to avoid drawing the same points again
+
         screen.input(); // Check if the user wants to close the window
+        SDL_Delay(30); // Delay
     }
 
+    return 0;
 }
