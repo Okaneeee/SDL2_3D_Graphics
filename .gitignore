@@ -1,3 +1,7 @@
+# SLD Library, import your own
+SDL2/
+
+
 # CMake
 /cmake/
 
